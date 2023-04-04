@@ -1,7 +1,7 @@
 
 import datetime, time
 import requests, json
-import random
+#import random
 import base64
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
@@ -22,30 +22,73 @@ class tc_devices(models.Model):
     telcel                                      = fields.Boolean('Telcel', default=True)
     signal                                      = fields.Boolean('Good signal', default=True)
     company_ids                                 = fields.Many2many('res.company', 'tcdevices_res_company_rel', 'user_id', 'cid', string='Companies', default=lambda self: self.env.user.company_id)
+    company_id                                  = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)   
     #motor                                       = fields.Boolean('Motor', default=True, track_visibility="onchange")
     motor                                       = fields.Boolean('Motor', default=True)
 
     _sql_constraints = [
         ('uniqueid_uniq', 'unique(uniqueid)', "The imei of the GPS device already exists"),
     ]    
+    """
+    @api.model
+    def create(self, vals):
+        print("#######################")
+        print(vals)
+        if "uniqueid" in vals:            
+            devices_arg = [('uniqueid', '=', vals["uniqueid"])]
+            data = self.search(devices_arg)            
+            
+            if(data and len(data)>0):
+                print(data)
+                return data 
+            if("positionid" in vals and vals["positionid"]==False):
+                 vals.pop("positionid")
+            if("company_id" in vals):
+                 vals.pop("company_id")
+                 
+        print(vals)
+        return  super().create(vals)
+    
+    def save(self, vals):
+        
+        print("#######################")
+        print(vals)
+        if "uniqueid" in vals:            
+            devices_arg = [('uniqueid', '=', vals["uniqueid"])]
+            data = self.search(devices_arg)            
+            
+            if(data and len(data)>0):
+                return data 
+            if("positionid" in vals and vals["positionid"]==False):
+                 vals.pop("positionid")
+            if("company_id" in vals):
+                 vals.pop("company_id")
+                 
+        print(vals)
+    """
 
     @api.model
     def create(self, vals):
+        vals=self.save(vals)
+
         if "uniqueid" in vals:            
             devices_arg = [('uniqueid', '=', vals["uniqueid"])]
-            data = self.search(devices_arg)
-            if(data):
+            data = self.search(devices_arg)            
+            
+            if(data and len(data)>0):
                 return data 
+        return super().create(vals)
 
-        return  super(tc_devices, self).create(vals)
-    
-        """    
-    @api.one
-    def write(self, vals):  
-        return super(tc_devices, self).write(vals)
-        """
+    def write(self, vals):
+        rec = super().write(self.save(vals))
+        return rec
 
-    @api.one
+    def save(self, vals):
+        if("positionid" in vals and vals["positionid"]==False):
+            vals.pop("positionid")
+        if("company_id" in vals):
+            vals.pop("company_id")
+        return vals   
     def execute_commands(self, vals):
         data_return={"device":{},"status_command":{}}
         traccar_host                 =self.env['ir.config_parameter'].sudo().get_param('traccar_host','')
@@ -64,7 +107,6 @@ class tc_devices(models.Model):
 
         device = self.env.cr.dictfetchall()[0]
 
-        print(device)
         if(self.env.user.login=="developer"):
             return {"status": "error", "message": "Developer user does not have permissions, needs a paid account"}
 
@@ -80,8 +122,7 @@ class tc_devices(models.Model):
                 "textChannel"   :"false",
                 "attributes"    :{}
             } 
- 
-            ##headers = {	"Authorization": "Basic " + encoded		}
+             
             headers                 = {	"Authorization": "Basic YWRtaW46YWRtaW4=","content-type": "application/json"}
             req                     = requests.post(url, data=json.dumps(payload), headers=headers)
             req.raise_for_status()
@@ -89,4 +130,3 @@ class tc_devices(models.Model):
             json_traccar            = req.json()
 
         return json.dumps(json_traccar)
-        
