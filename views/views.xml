@@ -1,0 +1,74 @@
+<odoo>
+    <!-- SMTP -->
+    <record id="gpsmap_mail_alert" model="ir.mail_server"> 
+        <field name="name">gpsmap SMTP Alert</field>
+        <field name="smtp_host">solesgps.com</field>
+        <field name="smtp_port">465</field>
+        <field name="sequence">465</field>
+        <field name="smtp_encryption">ssl</field>
+        <field name="smtp_user">odoo_alerts@solesgps.com</field>
+        <field name="smtp_pass">Odoo_alerts1</field>          
+    </record>
+    
+    
+    <!-- SPEED -->
+
+    <record id='gpsmap_speed_view_tree' model='ir.ui.view'>
+        <field name="name">gpsmap.speed.tree</field>
+        <field name="model">gpsmap.speed</field>
+        <field name="arch" type="xml">
+            <tree string="Models">
+                <field name="deviceid" />
+                <field name="speed" />
+                <field name="starttime" />
+                <field name="endtime" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- ############################### -->    
+
+    <record id='gpsmap_device_view_tree' model='ir.ui.view'>
+        <field name="name">gpsmap_device.tree</field>
+        <field name="model">gpsmap_device</field>
+        <field name="arch" type="xml">
+            <tree string="Models">
+                <field name="name" />
+                <field name="protocol"/>
+            </tree>
+        </field>
+    </record>
+    <record id='gpsmap_device_view_form' model='ir.ui.view'>
+        <field name="name">gpsmap_device.form</field>
+        <field name="model">gpsmap_device</field>
+        <field name="arch" type="xml">
+            <form string="Geofence">
+                <group  col="4">
+                    <field name="name" />
+                    <field name="protocol"/>
+                </group>                
+            </form>
+        </field>
+    </record>
+
+    <record id='gpsmap_commands_view_tree' model='ir.ui.view'>
+        <field name="name">gpsmap_commands.tree</field>
+        <field name="model">gpsmap_commands</field>
+        <field name="arch" type="xml">
+            <tree string="Models">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='device_commands_view_form' model='ir.ui.view'>
+        <field name="name">device_commands.form</field>
+        <field name="model">device_commands</field>
+        <field name="arch" type="xml">
+            <form string="Commands">
+                <field name="commands_id"/>
+            </form>
+        </field>
+    </record>
+
+</odoo>
