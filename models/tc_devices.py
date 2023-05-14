@@ -84,11 +84,38 @@ class tc_devices(models.Model):
         return rec
 
     def save(self, vals):
+        data_devices={}
+        if("name" in vals):
+            data_devices["name"]=vals["name"]
+        if("uniqueid" in vals):
+            data_devices["uniqueid"]=vals["uniqueid"]
+        if("icc" in vals):
+            data_devices["icc"]=vals["icc"]
+        if("phone" in vals):
+            data_devices["phone"]=vals["phone"]
+        if("model" in vals):
+            data_devices["model"]=vals["model"]
+        if("lastupdate" in vals):
+            data_devices["lastupdate"]=vals["lastupdate"]
+        if("disabled" in vals):
+            data_devices["disabled"]=vals["disabled"]
+        if("telcel" in vals):
+            data_devices["telcel"]=vals["telcel"]
+        if("signal" in vals):
+            data_devices["signal"]=vals["signal"]
+        if("company_ids" in vals):
+            data_devices["company_ids"]=vals["company_ids"]
+        if("company_id" in vals):
+            data_devices["company_id"]=vals["company_id"]
+        if("motor" in vals):
+            data_devices["motor"]=vals["motor"]
+
         if("positionid" in vals and vals["positionid"]==False):
             vals.pop("positionid")
         if("company_id" in vals):
             vals.pop("company_id")
-        return vals   
+
+        return data_devices   
     def execute_commands(self, vals):
         data_return={"device":{},"status_command":{}}
         traccar_host                 =self.env['ir.config_parameter'].sudo().get_param('traccar_host','')
