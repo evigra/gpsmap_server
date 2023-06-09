@@ -29,43 +29,6 @@ class tc_devices(models.Model):
     _sql_constraints = [
         ('uniqueid_uniq', 'unique(uniqueid)', "The imei of the GPS device already exists"),
     ]    
-    """
-    @api.model
-    def create(self, vals):
-        print("#######################")
-        print(vals)
-        if "uniqueid" in vals:            
-            devices_arg = [('uniqueid', '=', vals["uniqueid"])]
-            data = self.search(devices_arg)            
-            
-            if(data and len(data)>0):
-                print(data)
-                return data 
-            if("positionid" in vals and vals["positionid"]==False):
-                 vals.pop("positionid")
-            if("company_id" in vals):
-                 vals.pop("company_id")
-                 
-        print(vals)
-        return  super().create(vals)
-    
-    def save(self, vals):
-        
-        print("#######################")
-        print(vals)
-        if "uniqueid" in vals:            
-            devices_arg = [('uniqueid', '=', vals["uniqueid"])]
-            data = self.search(devices_arg)            
-            
-            if(data and len(data)>0):
-                return data 
-            if("positionid" in vals and vals["positionid"]==False):
-                 vals.pop("positionid")
-            if("company_id" in vals):
-                 vals.pop("company_id")
-                 
-        print(vals)
-    """
 
     @api.model
     def create(self, vals):
@@ -103,17 +66,8 @@ class tc_devices(models.Model):
             data_devices["telcel"]=vals["telcel"]
         if("signal" in vals):
             data_devices["signal"]=vals["signal"]
-        if("company_ids" in vals):
-            data_devices["company_ids"]=vals["company_ids"]
-        if("company_id" in vals):
-            data_devices["company_id"]=vals["company_id"]
         if("motor" in vals):
             data_devices["motor"]=vals["motor"]
-
-        if("positionid" in vals and vals["positionid"]==False):
-            vals.pop("positionid")
-        if("company_id" in vals):
-            vals.pop("company_id")
 
         return data_devices   
     def execute_commands(self, vals):
