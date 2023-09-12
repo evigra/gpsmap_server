@@ -32,6 +32,7 @@ Main Features
     'data': [
         # DATA
         'data/res_users.xml',
+        'data/ir_cron.xml',
         
         'security/security.xml',
         'security/ir.model.access.csv',

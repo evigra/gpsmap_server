@@ -135,6 +135,16 @@ class vehicle(models.Model):
         return return_positions    
 
     @api.model    
+    def cron_positions_delete(self):
+        sql ="""            
+            DELETE FROM tc_positions tp 
+			WHERE
+				to_char(now() - INTERVAL '1' MINUTE, 'YYYY-MM-DD HH24:MI:SS') >
+					to_char(servertime + INTERVAL '6' HOUR, 'YYYY-MM-DD HH24:MI:SS')
+        """ 
+        self.env.cr.execute(sql)
+
+    @api.model    
     def cron_positions(self):
         sql ="""            
             SELECT 
@@ -145,7 +155,7 @@ class vehicle(models.Model):
                 latitude,longitude,altitude,course
             FROM    
                 tc_positions tp JOIN 
-                tc_devices td on td.positionid=tp.id JOIN                
+                tc_devices td on td.id=tp.deviceid JOIN
 				tcdevices_res_company_rel on user_id=td.id AND cid='%s'
         """ %(self.env.user.company_id.id)
 
