@@ -104,7 +104,7 @@ class tc_devices(models.Model):
                 "attributes"    :{}
             } 
              
-            headers                 = {	"Authorization": "Basic YWRtaW46YWRtaW4=","content-type": "application/json"}
+            headers                 = {	"Authorization": "Basic YWRtaW46YWRtaW4 =","content-type": "application/json"}
             req                     = requests.post(url, data=json.dumps(payload), headers=headers)
             req.raise_for_status()
  
