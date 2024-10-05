@@ -139,8 +139,8 @@ class vehicle(models.Model):
         sql ="""            
             DELETE FROM tc_positions tp 
 			WHERE
-				to_char(now() - INTERVAL '1' MINUTE, 'YYYY-MM-DD HH24:MI:SS') >
-					to_char(servertime + INTERVAL '6' HOUR, 'YYYY-MM-DD HH24:MI:SS')
+	            to_char(now() - INTERVAL '1' MINUTE, 'YYYY-MM-DD HH24:MI:SS') >
+	            to_char(tp.servertime, 'YYYY-MM-DD HH24:MI:SS')
         """ 
         self.env.cr.execute(sql)
 
@@ -149,14 +149,16 @@ class vehicle(models.Model):
         sql ="""            
             SELECT 
                 deviceid,protocol,tp.speed,tp.attributes,
-				to_char(devicetime + INTERVAL '6' HOUR, 'YYYY-MM-DD HH24:MI:SS') as devicetime,
-				to_char(servertime + INTERVAL '6' HOUR, 'YYYY-MM-DD HH24:MI:SS') as servertime,
-				to_char(fixtime + INTERVAL '6' HOUR, 'YYYY-MM-DD HH24:MI:SS') as fixtime,                              
+                to_char(devicetime, 'YYYY-MM-DD HH24:MI:SS') as devicetime,
+                to_char(servertime, 'YYYY-MM-DD HH24:MI:SS') as servertime,
+
+				to_char(fixtime, 'YYYY-MM-DD HH24:MI:SS') as fixtime,                                              
                 latitude,longitude,altitude,course
             FROM    
                 tc_positions tp JOIN 
                 tc_devices td on td.id=tp.deviceid JOIN
 				tcdevices_res_company_rel on user_id=td.id AND cid='%s'
+            ORDER BY tp.devicetime DESC    
         """ %(self.env.user.company_id.id)
 
         self.env.cr.execute(sql)
