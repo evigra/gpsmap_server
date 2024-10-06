@@ -136,6 +136,7 @@ class vehicle(models.Model):
 
     @api.model    
     def cron_positions_delete(self):
+        print("########### BORRANDO ########################")
         sql ="""            
             DELETE FROM tc_positions tp 
 			WHERE
@@ -143,6 +144,8 @@ class vehicle(models.Model):
 	            to_char(tp.servertime, 'YYYY-MM-DD HH24:MI:SS')
         """ 
         self.env.cr.execute(sql)
+        print(json.dumps(self.env.cr.dictfetchall()))
+
 
     @api.model    
     def cron_positions(self):
