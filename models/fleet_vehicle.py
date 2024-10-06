@@ -143,6 +143,7 @@ class vehicle(models.Model):
 	            to_char(now() - INTERVAL '1' MINUTE, 'YYYY-MM-DD HH24:MI:SS') >
 	            to_char(tp.servertime, 'YYYY-MM-DD HH24:MI:SS')
         """ 
+        print(sql)
         self.env.cr.execute(sql)
         print(json.dumps(self.env.cr.dictfetchall()))
 
